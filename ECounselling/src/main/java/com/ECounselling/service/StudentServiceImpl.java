@@ -92,7 +92,7 @@ public class StudentServiceImpl implements StudentService {
             College college = department.getCollege();
             map.put("collegeId", college.getCollegeId());
             map.put("collegeName", college.getCollegeName());
-            map.put("collegeLocation", college.getLocation());
+            map.put("collegeAddress", college.getAddress());
 
             response.add(map);
         }
@@ -105,7 +105,8 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setStudentName(student.getStudentName());
         existingStudent.setContactNumber(student.getContactNumber());
         existingStudent.setAddress(student.getAddress());
-        existingStudent.setBoard(student.getBoard());
+        existingStudent.setTenthboard(student.getTenthboard());
+        existingStudent.setTwelfthboard(student.getTwelfthboard());
         existingStudent.setSchoolName(student.getSchoolName());
         existingStudent.setMailId(student.getMailId());
         existingStudent.setTenthMarks(student.getTenthMarks());
@@ -119,7 +120,6 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findByMailId(mailId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
 
-        // Compare the password
         if (!student.getPassword().equals(password)) {
             throw new IllegalArgumentException("Invalid email or password");
         }

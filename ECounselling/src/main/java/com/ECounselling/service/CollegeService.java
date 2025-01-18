@@ -16,4 +16,5 @@ public interface CollegeService {
     ApiResponse toggleCollegeStatus(Long collegeId, College c);
     ApiResponse addDepartmentToCollege(Long collegeId, Department department);
     ApiResponse getAllDepartmentsByCollege(Long collegeId);
+    ApiResponse loginCollege(String mailId, String password);
 }

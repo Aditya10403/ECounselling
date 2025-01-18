@@ -12,7 +12,8 @@ public class Student {
     private String studentName;
     private String contactNumber;
     private String address;
-    private String board;
+    private String tenthboard;
+    private String twelfthboard;
     private String schoolName;
     private String mailId;
     private Double tenthMarks;
@@ -20,15 +21,17 @@ public class Student {
     private String img;
     private Integer erank;
     private String password;
+    private String role = "STUDENT";
 
     public Student() { }
 
-    public Student(Long studentId, String studentName, String contactNumber, String address, String board, String schoolName, String mailId, Double tenthMarks, Double twelveMarks, String img, Integer erank, String password) {
+    public Student(Long studentId, String studentName, String contactNumber, String address, String tenthboard, String twelfthboard, String schoolName, String mailId, Double tenthMarks, Double twelveMarks, String img, Integer erank, String password) {
         this.studentId = studentId;
         this.studentName = studentName;
         this.contactNumber = contactNumber;
         this.address = address;
-        this.board = board;
+        this.tenthboard = tenthboard;
+        this.twelfthboard = twelfthboard;
         this.schoolName = schoolName;
         this.mailId = mailId;
         this.tenthMarks = tenthMarks;
@@ -70,12 +73,20 @@ public class Student {
         this.address = address;
     }
 
-    public String getBoard() {
-        return board;
+    public String getTenthboard() {
+        return tenthboard;
     }
 
-    public void setBoard(String board) {
-        this.board = board;
+    public void setTenthboard(String tenthboard) {
+        this.tenthboard = tenthboard;
+    }
+
+    public String getTwelfthboard() {
+        return twelfthboard;
+    }
+
+    public void setTwelfthboard(String twelfthboard) {
+        this.twelfthboard = twelfthboard;
     }
 
     public String getSchoolName() {
@@ -132,5 +143,13 @@ public class Student {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

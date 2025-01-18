@@ -3,6 +3,7 @@ package com.ECounselling.service;
 import com.ECounselling.exception.CollegeNotFoundException;
 import com.ECounselling.model.College;
 import com.ECounselling.model.Department;
+import com.ECounselling.model.Student;
 import com.ECounselling.repository.CollegeRepository;
 import com.ECounselling.repository.DepartmentRepository;
 import com.ECounselling.response.ApiResponse;
@@ -56,7 +57,7 @@ public class CollegeServiceImpl implements CollegeService {
                 .orElseThrow(() -> new CollegeNotFoundException("College not found with ID: " + collegeId));
 
         existingCollege.setCollegeName(c.getCollegeName());
-        existingCollege.setLocation(c.getLocation());
+        existingCollege.setAddress(c.getAddress());
         existingCollege.setContactInfo(c.getContactInfo());
         existingCollege.setNirfRank(c.getNirfRank());
         existingCollege.setLogo(c.getLogo());
@@ -131,6 +132,22 @@ public class CollegeServiceImpl implements CollegeService {
                 HttpStatus.OK.value(),
                 "Departments retrieved successfully",
                 departments
+        );
+    }
+
+    @Override
+    public ApiResponse loginCollege(String mailId, String password) {
+        College college = collegeRepository.findByMailId(mailId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+
+        if (!college.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Invalid email or password");
+        }
+
+        return new ApiResponse(
+                HttpStatus.OK.value(),
+                "Login successful",
+                college
         );
     }
 }

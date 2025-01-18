@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/college")
@@ -91,4 +92,22 @@ public class CollegeController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> loginStudent(@RequestBody Map<String, String> credentials) {
+        String mailId = credentials.get("mailId");
+        String password = credentials.get("password");
+
+        try {
+            ApiResponse response = collegeService.loginCollege(mailId, password);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    new ApiResponse(
+                            HttpStatus.UNAUTHORIZED.value(),
+                            e.getMessage(),
+                            null
+                    )
+            );
+        }
+    }
 }

@@ -16,11 +16,14 @@ public class College {
     @Column(unique = true, nullable = false)
     private String collegeName;
 
-    private String location;
+    private String mailId;
+    private String password;
+    private String address;
     private String contactInfo;
     private Integer nirfRank;
     private String logo;
     private Boolean status; // isBlocked
+    private String role = "COLLEGE";
 
     @OneToMany(mappedBy = "college", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -28,14 +31,17 @@ public class College {
 
     public College() {}
 
-    public College(Long collegeId, String collegeName, String location, String contactInfo, Integer nirfRank, String logo, Boolean status, List<Department> departments) {
+    public College(Long collegeId, String collegeName, String mailId, String password, String address, String contactInfo, Integer nirfRank, String logo, Boolean status, String role, List<Department> departments) {
         this.collegeId = collegeId;
         this.collegeName = collegeName;
-        this.location = location;
+        this.mailId = mailId;
+        this.password = password;
+        this.address = address;
         this.contactInfo = contactInfo;
         this.nirfRank = nirfRank;
         this.logo = logo;
         this.status = status;
+        this.role = role;
         this.departments = departments;
     }
 
@@ -55,12 +61,28 @@ public class College {
         this.collegeName = collegeName;
     }
 
-    public String getLocation() {
-        return location;
+    public String getMailId() {
+        return mailId;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setMailId(String mailId) {
+        this.mailId = mailId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getContactInfo() {
@@ -101,5 +123,13 @@ public class College {
 
     public void setDepartments(List<Department> departments) {
         this.departments = departments;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
