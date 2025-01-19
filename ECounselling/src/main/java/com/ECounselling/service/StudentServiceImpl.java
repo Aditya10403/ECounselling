@@ -113,6 +113,7 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setTwelveMarks(student.getTwelveMarks());
         existingStudent.setImg(student.getImg());
         existingStudent.setErank(student.getErank());
+        existingStudent.setPassword(student.getPassword());
     }
     
     @Override

@@ -7,6 +7,9 @@ import com.ECounselling.model.Student;
 import com.ECounselling.repository.CollegeRepository;
 import com.ECounselling.repository.DepartmentRepository;
 import com.ECounselling.response.ApiResponse;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -57,6 +60,8 @@ public class CollegeServiceImpl implements CollegeService {
                 .orElseThrow(() -> new CollegeNotFoundException("College not found with ID: " + collegeId));
 
         existingCollege.setCollegeName(c.getCollegeName());
+        existingCollege.setMailId(c.getMailId());
+        existingCollege.setPassword(c.getPassword());
         existingCollege.setAddress(c.getAddress());
         existingCollege.setContactInfo(c.getContactInfo());
         existingCollege.setNirfRank(c.getNirfRank());
