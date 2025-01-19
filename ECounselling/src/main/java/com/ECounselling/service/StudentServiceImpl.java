@@ -7,6 +7,7 @@ import com.ECounselling.model.Student;
 import com.ECounselling.repository.DepartmentRepository;
 import com.ECounselling.repository.StudentRepository;
 import com.ECounselling.response.ApiResponse;
+import com.ECounselling.response.MailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -131,4 +133,65 @@ public class StudentServiceImpl implements StudentService {
                 student
         );
     }
+
+    @Autowired
+    private EmailService emailService;
+
+    private Map<String, String> otpStore = new ConcurrentHashMap<>();
+
+    @Override
+    public MailResponse forgotPassword(String mailId) {
+        Student student = studentRepository.findByMailId(mailId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with mailId: " + mailId));
+
+        String otp = generateOtp();
+        otpStore.put(mailId, otp);
+
+        try {
+            emailService.sendOtpEmail(
+                    student.getMailId(),
+                    "OTP for Password Reset",
+                    "Your OTP is: " + otp
+            );
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send OTP email");
+        }
+        return new MailResponse(
+                HttpStatus.OK.value(),
+                "OTP sent successfully to your email"
+        );
+    }
+
+    @Override
+    public MailResponse validateOtp(String mailId, String otp) {
+        if (!otpStore.containsKey(mailId) || !otpStore.get(mailId).equals(otp)) {
+            throw new IllegalArgumentException("Invalid or expired OTP");
+        }
+        otpStore.remove(mailId);
+        return new MailResponse(
+                HttpStatus.OK.value(),
+                "OTP validated successfully"
+        );
+    }
+
+    // Returns a 6 digit OTP
+    private String generateOtp() {
+        return String.valueOf((int) (Math.random() * 900000) + 100000);
+    }
+
+    @Override
+    public MailResponse resetPassword(String mailId, String newPassword) {
+        Student student = studentRepository.findByMailId(mailId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with mailId: " + mailId));
+
+        student.setPassword(newPassword);
+        studentRepository.save(student);
+
+        return new MailResponse(
+                HttpStatus.OK.value(),
+                "Password reset successfully"
+        );
+    }
+
 }

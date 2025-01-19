@@ -1,8 +1,8 @@
 package com.ECounselling.service;
 
-import com.ECounselling.model.Department;
 import com.ECounselling.model.Student;
 import com.ECounselling.response.ApiResponse;
+import com.ECounselling.response.MailResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -15,4 +15,9 @@ public interface StudentService {
     ApiResponse verifyMail(String mailId);
     List<Map<String, Object>> getDepartmentsByERank(Integer erank);
     ApiResponse loginStudent(String mailId, String password);
+
+    MailResponse forgotPassword(String mailId);
+    MailResponse validateOtp(String mailId, String otp);
+    MailResponse resetPassword(String mailId, String newPassword);
+
 }

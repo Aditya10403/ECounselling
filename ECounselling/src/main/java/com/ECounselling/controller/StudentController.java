@@ -2,6 +2,7 @@ package com.ECounselling.controller;
 
 import com.ECounselling.model.Department;
 import com.ECounselling.model.Student;
+import com.ECounselling.response.MailResponse;
 import com.ECounselling.service.StudentService;
 import com.ECounselling.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,66 @@ public class StudentController {
     public ResponseEntity<List<Map<String, Object>>> getDepartmentsByERank(@PathVariable("erank") Integer erank) {
         List<Map<String, Object>> departmentsWithCollege = studentService.getDepartmentsByERank(erank);
         return ResponseEntity.ok(departmentsWithCollege);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<MailResponse> forgotPassword(@RequestBody Map<String, String> request) {
+        String mailId = request.get("mailId");
+
+        try {
+            MailResponse response = studentService.forgotPassword(mailId);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new MailResponse(
+                            HttpStatus.NOT_FOUND.value(),
+                            e.getMessage()
+                    )
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MailResponse(
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            e.getMessage()
+                    )
+            );
+        }
+    }
+
+    @PostMapping("/validate-otp")
+    public ResponseEntity<MailResponse> validateOtp(@RequestBody Map<String, String> request) {
+        String mailId = request.get("mailId");
+        String otp = request.get("otp");
+
+        try {
+            MailResponse response = studentService.validateOtp(mailId, otp);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new MailResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            e.getMessage()
+                    )
+            );
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<MailResponse> resetPassword(@RequestBody Map<String, String> request) {
+        String mailId = request.get("mailId");
+        String newPassword = request.get("newPassword");
+
+        try {
+            MailResponse response = studentService.resetPassword(mailId, newPassword);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new MailResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            e.getMessage()
+                    )
+            );
+        }
     }
 
 }

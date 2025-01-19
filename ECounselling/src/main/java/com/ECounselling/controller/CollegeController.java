@@ -4,6 +4,7 @@ import com.ECounselling.exception.CollegeNotFoundException;
 import com.ECounselling.model.College;
 import com.ECounselling.model.Department;
 import com.ECounselling.response.ApiResponse;
+import com.ECounselling.response.MailResponse;
 import com.ECounselling.service.CollegeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -106,6 +107,66 @@ public class CollegeController {
                             HttpStatus.UNAUTHORIZED.value(),
                             e.getMessage(),
                             null
+                    )
+            );
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<MailResponse> forgotPassword(@RequestBody Map<String, String> request) {
+        String mailId = request.get("mailId");
+
+        try {
+            MailResponse response = collegeService.forgotPassword(mailId);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new MailResponse(
+                            HttpStatus.NOT_FOUND.value(),
+                            e.getMessage()
+                    )
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MailResponse(
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            e.getMessage()
+                    )
+            );
+        }
+    }
+
+    @PostMapping("/validate-otp")
+    public ResponseEntity<MailResponse> validateOtp(@RequestBody Map<String, String> request) {
+        String mailId = request.get("mailId");
+        String otp = request.get("otp");
+
+        try {
+            MailResponse response = collegeService.validateOtp(mailId, otp);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new MailResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            e.getMessage()
+                    )
+            );
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<MailResponse> resetPassword(@RequestBody Map<String, String> request) {
+        String mailId = request.get("mailId");
+        String newPassword = request.get("newPassword");
+
+        try {
+            MailResponse response = collegeService.resetPassword(mailId, newPassword);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new MailResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            e.getMessage()
                     )
             );
         }

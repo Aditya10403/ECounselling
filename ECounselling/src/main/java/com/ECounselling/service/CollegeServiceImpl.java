@@ -3,18 +3,17 @@ package com.ECounselling.service;
 import com.ECounselling.exception.CollegeNotFoundException;
 import com.ECounselling.model.College;
 import com.ECounselling.model.Department;
-import com.ECounselling.model.Student;
 import com.ECounselling.repository.CollegeRepository;
 import com.ECounselling.repository.DepartmentRepository;
 import com.ECounselling.response.ApiResponse;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.ECounselling.response.MailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class CollegeServiceImpl implements CollegeService {
@@ -153,6 +152,66 @@ public class CollegeServiceImpl implements CollegeService {
                 HttpStatus.OK.value(),
                 "Login successful",
                 college
+        );
+    }
+
+    @Autowired
+    private EmailService emailService;
+
+    private Map<String, String> otpStore = new ConcurrentHashMap<>();
+
+    @Override
+    public MailResponse forgotPassword(String mailId) {
+        College college = collegeRepository.findByMailId(mailId)
+                .orElseThrow(() -> new IllegalArgumentException("College not found with mailId: " + mailId));
+
+        String otp = generateOtp();
+        otpStore.put(mailId, otp);
+
+        try {
+            emailService.sendOtpEmail(
+                    college.getMailId(),
+                    "OTP for Password Reset",
+                    "Your OTP is: " + otp
+            );
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send OTP email");
+        }
+        return new MailResponse(
+                HttpStatus.OK.value(),
+                "OTP sent successfully to your email"
+        );
+    }
+
+    @Override
+    public MailResponse validateOtp(String mailId, String otp) {
+        if (!otpStore.containsKey(mailId) || !otpStore.get(mailId).equals(otp)) {
+            throw new IllegalArgumentException("Invalid or expired OTP");
+        }
+        otpStore.remove(mailId);
+        return new MailResponse(
+                HttpStatus.OK.value(),
+                "OTP validated successfully"
+        );
+    }
+
+    // Returns a 6 digit OTP
+    private String generateOtp() {
+        return String.valueOf((int) (Math.random() * 900000) + 100000);
+    }
+
+    @Override
+    public MailResponse resetPassword(String mailId, String newPassword) {
+        College college = collegeRepository.findByMailId(mailId)
+                .orElseThrow(() -> new IllegalArgumentException("College not found with mailId: " + mailId));
+
+        college.setPassword(newPassword);
+        collegeRepository.save(college);
+
+        return new MailResponse(
+                HttpStatus.OK.value(),
+                "Password reset successfully"
         );
     }
 }
