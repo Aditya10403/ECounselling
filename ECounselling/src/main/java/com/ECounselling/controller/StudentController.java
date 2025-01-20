@@ -1,6 +1,5 @@
 package com.ECounselling.controller;
 
-import com.ECounselling.model.Department;
 import com.ECounselling.model.Student;
 import com.ECounselling.response.MailResponse;
 import com.ECounselling.service.StudentService;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/student")
 public class StudentController {
 
