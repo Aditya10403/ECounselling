@@ -87,7 +87,11 @@ public class AdminController {
 
     @GetMapping("/give-result")
     public ResponseEntity<List<AllocationResult>> getAllocationResults() {
-        return ResponseEntity.ok(applicationService.allocateDepartments());
+        List<AllocationResult> allocationResults = applicationService.allocateDepartments();
+        if (allocationResults != null && !allocationResults.isEmpty()) {
+            return new ResponseEntity<>(allocationResults, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
