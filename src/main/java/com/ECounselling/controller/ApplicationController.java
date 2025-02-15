@@ -17,13 +17,11 @@ public class ApplicationController {
 
     @PostMapping("/save")
     public ResponseEntity<Application> saveApplication(@RequestBody Application application) {
-        Application savedApplication = applicationRepository.save(application);
-        return ResponseEntity.ok(savedApplication);
+        return ResponseEntity.ok(applicationRepository.save(application));
     }
 
     @PostMapping("/save-all")
     public ResponseEntity<List<Application>> saveAllApplications(@RequestBody List<Application> applications) {
-        List<Application> savedApplications = applicationRepository.saveAll(applications);
-        return ResponseEntity.ok(savedApplications);
+        return ResponseEntity.ok(applicationRepository.saveAll(applications));
     }
 }

@@ -86,8 +86,8 @@ public class AdminController {
     }
 
     @GetMapping("/give-result")
-    public List<AllocationResult> getAllocationResults() {
-        return applicationService.allocateDepartments();
+    public ResponseEntity<List<AllocationResult>> getAllocationResults() {
+        return ResponseEntity.ok(applicationService.allocateDepartments());
     }
 
 }

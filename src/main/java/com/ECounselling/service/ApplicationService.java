@@ -2,7 +2,10 @@ package com.ECounselling.service;
 
 import com.ECounselling.model.AllocationResult;
 import com.ECounselling.model.Application;
+import com.ECounselling.model.Department;
+import com.ECounselling.repository.AllocationResultRepository;
 import com.ECounselling.repository.ApplicationRepository;
+import com.ECounselling.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,30 +17,66 @@ public class ApplicationService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private AllocationResultRepository allocationResultRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
     public List<AllocationResult> allocateDepartments() {
         List<Application> applications = applicationRepository.findAll();
-        applications.sort(Comparator.comparing(Application::getErank)); 
+        applications.sort(Comparator.comparing(Application::getErank));
+
         List<AllocationResult> results = new ArrayList<>();
-        Set<String> allocatedDepartments = new HashSet<>();
+        Map<String, Integer> seatAvailability = loadSeatAvailability();
 
         for (Application app : applications) {
-            String firstPref = app.getFirstPreference().get("departmentName") + " - " + app.getFirstPreference().get("collegeName");
-            String secondPref = app.getSecondPreference().get("departmentName") + " - " + app.getSecondPreference().get("collegeName");
-            String thirdPref = app.getThirdPreference().get("departmentName") + " - " + app.getThirdPreference().get("collegeName");
+            String firstPrefKey = getPreferenceKey(app.getFirstPreference());
+            String secondPrefKey = getPreferenceKey(app.getSecondPreference());
+            String thirdPrefKey = getPreferenceKey(app.getThirdPreference());
 
-            if (!allocatedDepartments.contains(firstPref)) {
-                results.add(new AllocationResult(app.getStudentName(), app.getFirstPreference().get("departmentName"), app.getFirstPreference().get("collegeName")));
-                allocatedDepartments.add(firstPref);
-            } else if (!allocatedDepartments.contains(secondPref)) {
-                results.add(new AllocationResult(app.getStudentName(), app.getSecondPreference().get("departmentName"), app.getSecondPreference().get("collegeName")));
-                allocatedDepartments.add(secondPref);
-            } else if (!allocatedDepartments.contains(thirdPref)) {
-                results.add(new AllocationResult(app.getStudentName(), app.getThirdPreference().get("departmentName"), app.getThirdPreference().get("collegeName")));
-                allocatedDepartments.add(thirdPref);
+            if (isSeatAvailable(firstPrefKey, seatAvailability)) {
+                allocateStudent(results, seatAvailability, app, app.getFirstPreference());
+            } else if (isSeatAvailable(secondPrefKey, seatAvailability)) {
+                allocateStudent(results, seatAvailability, app, app.getSecondPreference());
+            } else if (isSeatAvailable(thirdPrefKey, seatAvailability)) {
+                allocateStudent(results, seatAvailability, app, app.getThirdPreference());
             } else {
                 results.add(new AllocationResult(app.getStudentName(), "Not Allocated", ""));
             }
         }
+
+        allocationResultRepository.saveAll(results);
         return results;
     }
+
+    private Map<String, Integer> loadSeatAvailability() {
+        List<Department> departments = departmentRepository.findAll();
+        Map<String, Integer> seatAvailability = new HashMap<>();
+
+        for (Department dept : departments) {
+            String key = dept.getDepartmentName() + " - " + dept.getCollege().getCollegeName();
+            seatAvailability.put(key, dept.getNoOfSeats());
+        }
+        return seatAvailability;
+    }
+
+    private boolean isSeatAvailable(String key, Map<String, Integer> seatAvailability) {
+        return seatAvailability.getOrDefault(key, 0) > 0;
+    }
+
+    private void allocateStudent(List<AllocationResult> results, Map<String, Integer> seatAvailability,
+                                 Application app, Map<String, String> preference) {
+        String key = getPreferenceKey(preference);
+        seatAvailability.put(key, seatAvailability.get(key) - 1);
+
+        results.add(new AllocationResult(app.getStudentName(), preference.get("departmentName"),
+                preference.get("collegeName")));
+    }
+
+    private String getPreferenceKey(Map<String, String> preference) {
+        return preference.get("departmentName") + " - " + preference.get("collegeName");
+    }
 }
+
+
