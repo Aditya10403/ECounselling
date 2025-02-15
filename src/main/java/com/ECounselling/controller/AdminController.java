@@ -1,9 +1,7 @@
 package com.ECounselling.controller;
 
-import com.ECounselling.model.Admin;
-import com.ECounselling.model.AllocationResult;
-import com.ECounselling.model.College;
-import com.ECounselling.model.Student;
+import com.ECounselling.model.*;
+import com.ECounselling.repository.CounsellingStatusRepository;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.service.AdminService;
 import com.ECounselling.service.ApplicationService;
@@ -34,6 +32,9 @@ public class AdminController {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private CounsellingStatusRepository counsellingStatusRepository;
 
     @PostMapping("/create-admin")
     public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
@@ -92,6 +93,15 @@ public class AdminController {
             return new ResponseEntity<>(allocationResults, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/set-status/{status}")
+    public ResponseEntity<?> setCounsellingStatus(@PathVariable boolean status) {
+        CounsellingStatus counsellingStatus = counsellingStatusRepository.findById(1L)
+                .orElse(new CounsellingStatus());
+        counsellingStatus.setCounsellingStarted(status);
+        counsellingStatusRepository.save(counsellingStatus);
+        return new ResponseEntity<>(counsellingStatus, HttpStatus.OK);
     }
 
 }

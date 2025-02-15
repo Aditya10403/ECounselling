@@ -45,6 +45,12 @@ public class CollegeController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("get-details/{collegeName}")
+    public ResponseEntity<ApiResponse> getCollegeDetailsByName(@PathVariable String collegeName) {
+        ApiResponse response = collegeService.getCollegeDetailsByName(collegeName);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
     @PutMapping("/update")
     public ResponseEntity<ApiResponse> updateCollegeById(@RequestBody College college) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

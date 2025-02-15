@@ -2,7 +2,9 @@ package com.ECounselling.controller;
 
 import com.ECounselling.model.Admin;
 import com.ECounselling.model.College;
+import com.ECounselling.model.CounsellingStatus;
 import com.ECounselling.model.Student;
+import com.ECounselling.repository.CounsellingStatusRepository;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.service.AdminService;
 import com.ECounselling.service.CollegeService;
@@ -24,6 +26,9 @@ public class PublicController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private CounsellingStatusRepository counsellingStatusRepository;
 
     @GetMapping("/health-check")
     public ResponseEntity<String> healthCheck() {
@@ -64,4 +69,15 @@ public class PublicController {
             );
         }
     }
+
+    @GetMapping("/check-counselling-status")
+    public ResponseEntity<Boolean> checkCounsellingStatus() {
+        return ResponseEntity.ok(
+                counsellingStatusRepository.findById(1L)
+                        .map(CounsellingStatus::isCounsellingStarted)
+                        .orElse(false)
+        );
+    }
+
+
 }

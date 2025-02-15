@@ -36,7 +36,8 @@ public class SecurityConfig {
                                 "/api/student/reset-password",
                                 "/api/college/forgot-password",
                                 "/api/college/validate-otp",
-                                "/api/college/reset-password"
+                                "/api/college/reset-password",
+                                "/api/college/get-details/**"
                         ).permitAll()
                         .requestMatchers("/api/college/**").hasAnyRole("COLLEGE", "ADMIN")
                         .requestMatchers("/api/department/**").hasAnyRole("COLLEGE")
