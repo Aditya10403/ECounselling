@@ -1,10 +1,12 @@
 package com.ECounselling.controller;
 
 import com.ECounselling.model.Admin;
+import com.ECounselling.model.AllocationResult;
 import com.ECounselling.model.College;
 import com.ECounselling.model.Student;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.service.AdminService;
+import com.ECounselling.service.ApplicationService;
 import com.ECounselling.service.CollegeService;
 import com.ECounselling.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/api/admin")
 public class AdminController {
 
@@ -30,6 +31,9 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @PostMapping("/create-admin")
     public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
@@ -79,6 +83,11 @@ public class AdminController {
     public ResponseEntity<ApiResponse> toggleCollegeStatus(@PathVariable("collegeName") String collegeName) {
         ApiResponse response = collegeService.toggleCollegeStatus(collegeName);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/give-result")
+    public List<AllocationResult> getAllocationResults() {
+        return applicationService.allocateDepartments();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ECounselling.controller;
 
+import com.ECounselling.model.Admin;
 import com.ECounselling.model.College;
 import com.ECounselling.model.Student;
 import com.ECounselling.response.ApiResponse;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/public")
-@CrossOrigin(origins = "http://localhost:5173")
 public class PublicController {
 
     @Autowired
@@ -31,6 +31,22 @@ public class PublicController {
                 "Server is running...",
                 HttpStatus.OK
         );
+    }
+
+    @PostMapping("/create-admin")
+    public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
+        try {
+            ApiResponse response = adminService.addAdmin(admin);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ApiResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            e.getMessage(),
+                            null
+                    )
+            );
+        }
     }
 
     @PostMapping("/create-student")
