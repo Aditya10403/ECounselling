@@ -30,22 +30,19 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/public/**",
-                                "/api/student/forgot-password",
-                                "/api/student/validate-otp",
-                                "/api/student/reset-password",
-                                "/api/college/forgot-password",
-                                "/api/college/validate-otp",
-                                "/api/college/reset-password",
-                                "/api/college/get-details/**",
-                                "/api/college/get-department-details/**"
+                        .requestMatchers(
+                                "/api/public/**",
+                                "/api/student/forgot-password", "/api/student/validate-otp", "/api/student/reset-password",
+                                "/api/college/forgot-password", "/api/college/validate-otp", "/api/college/reset-password",
+                                "/api/college/get-details/**", "/api/college/get-department-details/**"
                         ).permitAll()
+
                         .requestMatchers("/api/college/**").hasAnyRole("COLLEGE", "ADMIN")
                         .requestMatchers("/api/department/**").hasAnyRole("COLLEGE")
                         .requestMatchers("/api/student/**").hasRole("STUDENT")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().permitAll()
+
+                        .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
                 .sessionManagement(session -> session
