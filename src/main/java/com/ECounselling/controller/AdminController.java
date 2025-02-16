@@ -80,6 +80,15 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/all-applications")
+    public ResponseEntity<List<Application>> getAllApplications() {
+        List<Application> applications = applicationService.getAllApplications();
+        if (applications != null && !applications.isEmpty()) {
+            return new ResponseEntity<>(applications, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @PatchMapping("/toggle-status/{collegeName}")
     public ResponseEntity<ApiResponse> toggleCollegeStatus(@PathVariable("collegeName") String collegeName) {
         ApiResponse response = collegeService.toggleCollegeStatus(collegeName);

@@ -1,6 +1,7 @@
 package com.ECounselling.controller;
 
 import com.ECounselling.model.Application;
+import com.ECounselling.model.Student;
 import com.ECounselling.repository.ApplicationRepository;
 import com.ECounselling.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;

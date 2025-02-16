@@ -87,6 +87,10 @@ public class ApplicationService {
             return false;
         }
     }
+
+    public List<Application> getAllApplications() {
+        return applicationRepository.findAll();
+    }
 }
 
 
