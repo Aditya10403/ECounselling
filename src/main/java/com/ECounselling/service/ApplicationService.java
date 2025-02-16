@@ -77,6 +77,16 @@ public class ApplicationService {
     private String getPreferenceKey(Map<String, String> preference) {
         return preference.get("departmentName") + " - " + preference.get("collegeName");
     }
+
+    public Boolean resetAllotmentProcess() {
+        try {
+            applicationRepository.deleteAll();
+            allocationResultRepository.deleteAll();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
 
 

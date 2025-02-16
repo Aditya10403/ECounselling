@@ -14,6 +14,7 @@ public interface CollegeService {
     ApiResponse updateCollegeByMailId(String mailId, College c);
     ApiResponse getCollegeDetails(String mailId);
     ApiResponse getCollegeDetailsByName(String collegeName);
+    ApiResponse getDepartmentDetailsByName(String collegeName, String departmentName);
     ApiResponse toggleCollegeStatus(String collegeName);
     ApiResponse addDepartmentToCollege(String mailId, Department department);
     ApiResponse getAllDepartmentsOfCollege(String mailId);

@@ -104,5 +104,17 @@ public class AdminController {
         return new ResponseEntity<>(counsellingStatus, HttpStatus.OK);
     }
 
+    @DeleteMapping("/reset-allotment")
+    public ResponseEntity<?> resetAllotmentProcess() {
+        Boolean resetSuccess = applicationService.resetAllotmentProcess();
+        CounsellingStatus counsellingStatus = counsellingStatusRepository.findById(1L)
+                .orElse(new CounsellingStatus());
+        // set counselling started -> to false
+        counsellingStatus.setCounsellingStarted(false);
+        return resetSuccess ?
+                new ResponseEntity<>("Reset Success", HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 }
 
