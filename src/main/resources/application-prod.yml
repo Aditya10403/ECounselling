@@ -16,15 +16,3 @@ spring:
   main:
     allow-circular-references: true
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: lucifer2447415@gmail.com
-    password: zfsj iwtj gcuh hxpn
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-    default-encoding: UTF-8
