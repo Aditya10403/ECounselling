@@ -10,12 +10,9 @@ import com.ECounselling.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -36,7 +33,7 @@ public class AdminController {
     @Autowired
     private CounsellingStatusRepository counsellingStatusRepository;
 
-    @PostMapping("/create-admin")
+    @PostMapping("/signup")
     public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
         try {
             ApiResponse response = adminService.addAdmin(admin);
@@ -50,16 +47,6 @@ public class AdminController {
                     )
             );
         }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> adminLogin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String mailId = authentication.getName();
-        Optional<Admin> admin = adminService.findByMailId(mailId);
-        return admin.isPresent() ?
-                new ResponseEntity<>(admin, HttpStatus.OK) :
-                new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/all-college")

@@ -13,9 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/college")
@@ -23,19 +21,6 @@ public class CollegeController {
 
     @Autowired
     private CollegeService collegeService;
-
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse> collegeLogin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String mailId = authentication.getName();
-        Optional<College> college = collegeService.findByMailId(mailId);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ApiResponse(HttpStatus.OK.value(),
-                        "Login Successful",
-                        college
-                )
-        );
-    }
 
     @GetMapping("get-details")
     public ResponseEntity<ApiResponse> getCollegeDetails() {

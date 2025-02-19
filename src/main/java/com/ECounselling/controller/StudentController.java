@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/student")
@@ -22,24 +21,8 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> studentLogin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String mailId = authentication.getName();
-        Optional<Student> student = studentService.findByMailId(mailId);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ApiResponse(HttpStatus.OK.value(),
-                        "Login Successful",
-                        student
-                )
-        );
-    }
-
-
-    @GetMapping("get-details")
-    public ResponseEntity<ApiResponse> getStudentDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String mailId = authentication.getName();
+    @GetMapping("/get-details/{mailId}")
+    public ResponseEntity<?> getStudentDetails(@PathVariable String mailId) {
         ApiResponse response = studentService.getStudentDetails(mailId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }

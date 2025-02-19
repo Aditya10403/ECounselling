@@ -20,7 +20,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: lucifer2447415@gmail.com
-    password: ${MAIL_PASSWORD:}
+    password: ${MAIL_PASSWORD:zfsj iwtj gcuh hxpn}
     properties:
       mail:
         smtp:
@@ -31,6 +31,9 @@ spring:
 
   profiles:
     active: ${ENV:dev}
+
+jwt:
+  secret-key: ${SECRET_KEY:TaK+HaV^uvCHEFsEVfypW#7g9^k*Z8$V}
 
 server:
   port: 8085
