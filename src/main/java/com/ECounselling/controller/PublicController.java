@@ -55,6 +55,22 @@ public class PublicController {
         );
     }
 
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
+        try {
+            ApiResponse response = adminService.addAdmin(admin);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ApiResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            e.getMessage(),
+                            null
+                    )
+            );
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
         try {
