@@ -34,6 +34,9 @@ public class CollegeServiceImpl implements CollegeService {
         if (collegeRepository.existsByCollegeName(college.getCollegeName())) {
             throw new IllegalArgumentException("College with name '" + college.getCollegeName() + "' already exists");
         }
+        if (collegeRepository.existsByMailId(college.getMailId())) {
+            throw new IllegalArgumentException("College with mailId '" + college.getMailId() + "' already exists");
+        }
         college.setStatus(true);
         college.setPassword(passwordEncoder.encode(college.getPassword()));
         College savedCollege = collegeRepository.save(college);
