@@ -21,8 +21,10 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @GetMapping("/get-details/{mailId}")
-    public ResponseEntity<?> getStudentDetails(@PathVariable String mailId) {
+    @GetMapping("/get-details")
+    public ResponseEntity<?> getStudentDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String mailId = authentication.getName();
         ApiResponse response = studentService.getStudentDetails(mailId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
