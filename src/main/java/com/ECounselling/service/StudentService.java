@@ -3,6 +3,7 @@ package com.ECounselling.service;
 import com.ECounselling.model.Student;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.response.MailResponse;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ public interface StudentService {
     ApiResponse addStudentData(Student student);
     List<Student> getAllStudents();
     ApiResponse getStudentDetails(String mailId);
+    ApiResponse getStudentDetailsByName(String studentName);
     ApiResponse updateStudentByMail(String mailId, Student s);
     List<Map<String, Object>> getDepartmentsByERank(Integer erank);
     Optional<Student> findByMailId(String mailId);

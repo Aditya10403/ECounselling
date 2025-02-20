@@ -49,6 +49,18 @@ public class AdminController {
         }
     }
 
+    @GetMapping("student-details/{studentName}")
+    public ResponseEntity<ApiResponse> getStudentDetailsByName(@PathVariable String studentName) {
+        ApiResponse response = studentService.getStudentDetailsByName(studentName);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @GetMapping("college-details/{collegeName}")
+    public ResponseEntity<ApiResponse> getCollegeDetailsByName(@PathVariable String collegeName) {
+        ApiResponse response = collegeService.getCollegeDetailsByName(collegeName);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
     @GetMapping("/all-college")
     public ResponseEntity<List<College>> getAllColleges() {
         List<College> colleges = collegeService.getAllColleges();

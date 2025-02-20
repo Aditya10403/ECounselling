@@ -43,7 +43,7 @@ public class SecurityConfig {
                                 "/api/college/forgot-password", "/api/college/validate-otp", "/api/college/reset-password"
                         ).permitAll()
                         .requestMatchers("/api/college/**").hasAnyRole("COLLEGE", "ADMIN")
-                        .requestMatchers("/api/department/**").hasAnyRole("COLLEGE")
+                        .requestMatchers("/api/department/**").hasRole("COLLEGE")
                         .requestMatchers("/api/student/**").hasRole("STUDENT")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .build();
     }
 

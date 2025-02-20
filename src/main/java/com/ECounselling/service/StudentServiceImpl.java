@@ -1,5 +1,6 @@
 package com.ECounselling.service;
 
+import com.ECounselling.exception.CollegeNotFoundException;
 import com.ECounselling.exception.StudentNotFoundException;
 import com.ECounselling.model.College;
 import com.ECounselling.model.Department;
@@ -51,6 +52,17 @@ public class StudentServiceImpl implements StudentService {
     public ApiResponse getStudentDetails(String mailId) {
         Student student = studentRepository.findByMailId(mailId)
                 .orElseThrow(() -> new StudentNotFoundException("Student not found with mailId: " + mailId));
+        return new ApiResponse(
+                HttpStatus.OK.value(),
+                "Student retrieved successfully",
+                student
+        );
+    }
+
+    @Override
+    public ApiResponse getStudentDetailsByName(String studentName) {
+        Student student = studentRepository.findByStudentName(studentName)
+                .orElseThrow(() -> new CollegeNotFoundException("Student not found with name: " + studentName));
         return new ApiResponse(
                 HttpStatus.OK.value(),
                 "Student retrieved successfully",
