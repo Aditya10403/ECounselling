@@ -31,17 +31,25 @@ public class ApplicationService {
         Map<String, Integer> seatAvailability = loadSeatAvailability();
 
         for (Application app : applications) {
-            String firstPrefKey = getPreferenceKey(app.getFirstPreference());
-            String secondPrefKey = getPreferenceKey(app.getSecondPreference());
-            String thirdPrefKey = getPreferenceKey(app.getThirdPreference());
+            boolean allocated = false;
 
-            if (isSeatAvailable(firstPrefKey, seatAvailability)) {
-                allocateStudent(results, seatAvailability, app, app.getFirstPreference());
-            } else if (isSeatAvailable(secondPrefKey, seatAvailability)) {
-                allocateStudent(results, seatAvailability, app, app.getSecondPreference());
-            } else if (isSeatAvailable(thirdPrefKey, seatAvailability)) {
-                allocateStudent(results, seatAvailability, app, app.getThirdPreference());
-            } else {
+            List<Map<String, String>> preferences = Arrays.asList(
+                    app.getFirstPreference(),
+                    app.getSecondPreference(),
+                    app.getThirdPreference()
+            );
+
+            for (Map<String, String> preference : preferences) {
+                String key = getPreferenceKey(preference);
+
+                if (isSeatAvailable(key, seatAvailability)) {
+                    allocateStudent(results, seatAvailability, app, preference);
+                    allocated = true;
+                    break;
+                }
+            }
+
+            if (!allocated) {
                 results.add(new AllocationResult(app.getStudentName(), "Not Allocated", ""));
             }
         }
@@ -70,8 +78,11 @@ public class ApplicationService {
         String key = getPreferenceKey(preference);
         seatAvailability.put(key, seatAvailability.get(key) - 1);
 
-        results.add(new AllocationResult(app.getStudentName(), preference.get("departmentName"),
-                preference.get("collegeName")));
+        results.add(new AllocationResult(
+                app.getStudentName(),
+                preference.get("departmentName"),
+                preference.get("collegeName")
+        ));
     }
 
     private String getPreferenceKey(Map<String, String> preference) {
@@ -87,10 +98,8 @@ public class ApplicationService {
             return false;
         }
     }
-
+    
     public List<Application> getAllApplications() {
         return applicationRepository.findAll();
     }
 }
-
-

@@ -5,6 +5,7 @@ import com.ECounselling.model.College;
 import com.ECounselling.model.Department;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.response.MailResponse;
+import com.ECounselling.service.AllocationResultService;
 import com.ECounselling.service.CollegeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ public class CollegeController {
 
     @Autowired
     private CollegeService collegeService;
+
+    @Autowired
+    private AllocationResultService allocationResultService;
 
     @GetMapping("get-details")
     public ResponseEntity<ApiResponse> getCollegeDetails() {
@@ -89,6 +93,12 @@ public class CollegeController {
                     new ApiResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null)
             );
         }
+    }
+
+    @GetMapping("/{collegeName}/students")
+    public ResponseEntity<ApiResponse> getCollegeAllocatedStudents(@PathVariable String collegeName) {
+        ApiResponse response = allocationResultService.getResultsByCollegeName(collegeName);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @PostMapping("/forgot-password")

@@ -109,39 +109,6 @@ public class PublicController {
         }
     }
 
-    @PostMapping("/applications/save")
-    public ResponseEntity<ApiResponse> saveApplication(@RequestBody Application application) {
-        try {
-            Application savedApplication = applicationRepository.save(application);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ApiResponse(
-                            HttpStatus.OK.value(),
-                            "Application submitted successfully",
-                            savedApplication
-                    )
-            );
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ApiResponse(
-                            HttpStatus.BAD_REQUEST.value(),
-                            e.getMessage(),
-                            null
-                    )
-            );
-        }
-
-    }
-
-    @PostMapping("/applications/save-all")
-    public ResponseEntity<List<Application>> saveAllApplications(@RequestBody List<Application> applications) {
-        try {
-            List<Application> savedApplications = applicationRepository.saveAll(applications);
-            return new ResponseEntity<>(savedApplications, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @GetMapping("/check-counselling-status")
     public ResponseEntity<Boolean> checkCounsellingStatus() {
         return ResponseEntity.ok(

@@ -1,7 +1,12 @@
 package com.ECounselling.controller;
 
+import com.ECounselling.model.AllocationResult;
+import com.ECounselling.model.Application;
 import com.ECounselling.model.Student;
+import com.ECounselling.repository.AllocationResultRepository;
+import com.ECounselling.repository.ApplicationRepository;
 import com.ECounselling.response.MailResponse;
+import com.ECounselling.service.AllocationResultService;
 import com.ECounselling.service.StudentService;
 import com.ECounselling.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/student")
@@ -20,6 +26,12 @@ public class StudentController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private AllocationResultService allocationResultService;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @GetMapping("/get-details")
     public ResponseEntity<?> getStudentDetails() {
@@ -41,6 +53,34 @@ public class StudentController {
     public ResponseEntity<List<Map<String, Object>>> getDepartmentsByERank(@PathVariable("erank") Integer erank) {
         List<Map<String, Object>> departmentsWithCollege = studentService.getDepartmentsByERank(erank);
         return ResponseEntity.ok(departmentsWithCollege);
+    }
+
+    @GetMapping("/{studentName}/result")
+    public ResponseEntity<ApiResponse> getResultsByStudentName(@PathVariable String studentName) {
+        ApiResponse response = allocationResultService.getResultsByStudentName(studentName);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping("/applications/save")
+    public ResponseEntity<ApiResponse> saveApplication(@RequestBody Application application) {
+        try {
+            Application savedApplication = applicationRepository.save(application);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ApiResponse(
+                            HttpStatus.OK.value(),
+                            "Application submitted successfully",
+                            savedApplication
+                    )
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ApiResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            e.getMessage(),
+                            null
+                    )
+            );
+        }
     }
 
     @DeleteMapping("/delete")

@@ -1,6 +1,7 @@
 package com.ECounselling.controller;
 
 import com.ECounselling.model.*;
+import com.ECounselling.repository.ApplicationRepository;
 import com.ECounselling.repository.CounsellingStatusRepository;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.service.AdminService;
@@ -33,6 +34,9 @@ public class AdminController {
     @Autowired
     private CounsellingStatusRepository counsellingStatusRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
         try {
@@ -59,6 +63,16 @@ public class AdminController {
     public ResponseEntity<ApiResponse> getCollegeDetailsByName(@PathVariable String collegeName) {
         ApiResponse response = collegeService.getCollegeDetailsByName(collegeName);
         return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping("/applications/save-all")
+    public ResponseEntity<List<Application>> saveAllApplications(@RequestBody List<Application> applications) {
+        try {
+            List<Application> savedApplications = applicationRepository.saveAll(applications);
+            return new ResponseEntity<>(savedApplications, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/all-college")
