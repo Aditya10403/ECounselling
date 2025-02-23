@@ -1,6 +1,7 @@
 package com.ECounselling.controller;
 
 import com.ECounselling.model.*;
+import com.ECounselling.repository.AllocationResultRepository;
 import com.ECounselling.repository.ApplicationRepository;
 import com.ECounselling.repository.CounsellingStatusRepository;
 import com.ECounselling.response.ApiResponse;
@@ -36,6 +37,9 @@ public class AdminController {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private AllocationResultRepository allocationResultRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
@@ -98,6 +102,15 @@ public class AdminController {
         List<Application> applications = applicationService.getAllApplications();
         if (applications != null && !applications.isEmpty()) {
             return new ResponseEntity<>(applications, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/allocation-result")
+    public ResponseEntity<List<AllocationResult>> getAllAllocationResults() {
+        List<AllocationResult> results = allocationResultRepository.findAll();
+        if (results != null && !results.isEmpty()) {
+            return new ResponseEntity<>(results, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
