@@ -38,6 +38,9 @@ public class AdminController {
     @Autowired
     private AllocationResultRepository allocationResultRepository;
 
+    @Autowired
+    private NoticeService noticeService;
+
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
         try {
@@ -157,6 +160,16 @@ public class AdminController {
                              null
                         )
         );
+    }
+
+    @PostMapping("/notices/save")
+    public ResponseEntity<ApiResponse> addNotice(@RequestBody Notice notice) {
+        Notice savedNotice = noticeService.addNotice(notice);
+        return ResponseEntity.ok(new ApiResponse(
+                HttpStatus.CREATED.value(),
+                "Notice added successfully",
+                savedNotice
+        ));
     }
 
 }

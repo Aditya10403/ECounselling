@@ -7,10 +7,7 @@ import com.ECounselling.response.ApiError;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.response.AuthRequest;
 import com.ECounselling.response.JwtResponse;
-import com.ECounselling.service.AdminService;
-import com.ECounselling.service.CollegeService;
-import com.ECounselling.service.CounsellingStatusService;
-import com.ECounselling.service.StudentService;
+import com.ECounselling.service.*;
 import com.ECounselling.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +35,9 @@ public class PublicController {
 
     @Autowired
     private CounsellingStatusService counsellingStatusService;
+
+    @Autowired
+    private NoticeService noticeService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -117,6 +117,15 @@ public class PublicController {
                         status
                 )
         );
+    }
+
+    @GetMapping("/all-notices")
+    public ResponseEntity<List<Notice>> getAllNotices() {
+        List<Notice> notices = noticeService.getAllNotices();
+        if (notices != null && !notices.isEmpty()) {
+            return new ResponseEntity<>(notices, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
