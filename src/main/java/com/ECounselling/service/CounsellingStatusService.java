@@ -14,9 +14,17 @@ public class CounsellingStatusService {
 
     public CounsellingStatus getCounsellingStatus() {
         return counsellingStatusRepository.findById(1L)
+                .map(status -> {
+                    if (status.getStatus() == null) {
+                        status.setStatus(Status.NOT_STARTED);
+                        counsellingStatusRepository.save(status);
+                    }
+                    return status;
+                })
                 .orElseGet(() -> {
                     CounsellingStatus newStatus = new CounsellingStatus();
-                    return counsellingStatusRepository.save(newStatus);
+                    counsellingStatusRepository.save(newStatus);
+                    return newStatus;
                 });
     }
 
