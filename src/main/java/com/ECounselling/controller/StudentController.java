@@ -1,12 +1,12 @@
 package com.ECounselling.controller;
 
-import com.ECounselling.model.AllocationResult;
-import com.ECounselling.model.Application;
-import com.ECounselling.model.Student;
+import com.ECounselling.model.*;
 import com.ECounselling.repository.AllocationResultRepository;
 import com.ECounselling.repository.ApplicationRepository;
 import com.ECounselling.response.MailResponse;
 import com.ECounselling.service.AllocationResultService;
+import com.ECounselling.service.ApplicationService;
+import com.ECounselling.service.CounsellingStatusService;
 import com.ECounselling.service.StudentService;
 import com.ECounselling.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,9 @@ public class StudentController {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @GetMapping("/get-details")
     public ResponseEntity<?> getStudentDetails() {
@@ -81,6 +84,12 @@ public class StudentController {
                     )
             );
         }
+    }
+
+    @GetMapping("/applications/{studentName}")
+    public ResponseEntity<ApiResponse> getApplicationByStudentName(@PathVariable String studentName) {
+        ApiResponse response = applicationService.getApplicationByStudentName(studentName);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @DeleteMapping("/delete")

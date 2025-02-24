@@ -9,6 +9,7 @@ import com.ECounselling.response.AuthRequest;
 import com.ECounselling.response.JwtResponse;
 import com.ECounselling.service.AdminService;
 import com.ECounselling.service.CollegeService;
+import com.ECounselling.service.CounsellingStatusService;
 import com.ECounselling.service.StudentService;
 import com.ECounselling.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,7 @@ public class PublicController {
     private AdminService adminService;
 
     @Autowired
-    private CounsellingStatusRepository counsellingStatusRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
+    private CounsellingStatusService counsellingStatusService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -110,11 +108,14 @@ public class PublicController {
     }
 
     @GetMapping("/check-counselling-status")
-    public ResponseEntity<Boolean> checkCounsellingStatus() {
+    public ResponseEntity<ApiResponse> checkCounsellingStatus() {
+        CounsellingStatus status = counsellingStatusService.getCounsellingStatus();
         return ResponseEntity.ok(
-                counsellingStatusRepository.findById(1L)
-                        .map(CounsellingStatus::isCounsellingStarted)
-                        .orElse(false)
+                new ApiResponse(
+                        HttpStatus.OK.value(),
+                        "Counselling status retrieved",
+                        status
+                )
         );
     }
 

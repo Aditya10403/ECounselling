@@ -6,7 +6,9 @@ import com.ECounselling.model.Department;
 import com.ECounselling.repository.AllocationResultRepository;
 import com.ECounselling.repository.ApplicationRepository;
 import com.ECounselling.repository.DepartmentRepository;
+import com.ECounselling.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -101,5 +103,21 @@ public class ApplicationService {
     
     public List<Application> getAllApplications() {
         return applicationRepository.findAll();
+    }
+
+    public ApiResponse getApplicationByStudentName(String studentName) {
+        Optional<Application> application = applicationRepository.findByStudentName(studentName);
+        if (application.isPresent()) {
+            return new ApiResponse(
+                    HttpStatus.OK.value(),
+                    "Application retrieved successfully",
+                    application
+            );
+        }
+        return new ApiResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Application not found with student name :: " + studentName,
+                null
+        );
     }
 }

@@ -13,7 +13,11 @@ import lombok.Setter;
 @Setter
 @Table(name = "counselling_status")
 public class CounsellingStatus {
+
     @Id
     private Long id = 1L;
-    private boolean counsellingStarted;
+
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.NOT_STARTED;
+
 }

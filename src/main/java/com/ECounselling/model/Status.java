@@ -1,0 +1,8 @@
+package com.ECounselling.model;
+
+public enum Status {
+    NOT_STARTED,
+    APPLICATION_SUBMISSION_STARTED,
+    APPLICATION_SUBMISSION_CLOSED,
+    ALLOCATION_RESULT_OUT
+}

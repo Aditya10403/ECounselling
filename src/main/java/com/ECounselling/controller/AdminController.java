@@ -5,10 +5,7 @@ import com.ECounselling.repository.AllocationResultRepository;
 import com.ECounselling.repository.ApplicationRepository;
 import com.ECounselling.repository.CounsellingStatusRepository;
 import com.ECounselling.response.ApiResponse;
-import com.ECounselling.service.AdminService;
-import com.ECounselling.service.ApplicationService;
-import com.ECounselling.service.CollegeService;
-import com.ECounselling.service.StudentService;
+import com.ECounselling.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +30,7 @@ public class AdminController {
     private ApplicationService applicationService;
 
     @Autowired
-    private CounsellingStatusRepository counsellingStatusRepository;
+    private CounsellingStatusService counsellingStatusService;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -131,24 +128,35 @@ public class AdminController {
     }
 
     @PostMapping("/set-status/{status}")
-    public ResponseEntity<?> setCounsellingStatus(@PathVariable boolean status) {
-        CounsellingStatus counsellingStatus = counsellingStatusRepository.findById(1L)
-                .orElse(new CounsellingStatus());
-        counsellingStatus.setCounsellingStarted(status);
-        counsellingStatusRepository.save(counsellingStatus);
-        return new ResponseEntity<>(counsellingStatus, HttpStatus.OK);
+    public ResponseEntity<ApiResponse> setCounsellingStatus(@PathVariable Status status) {
+        CounsellingStatus updatedStatus = counsellingStatusService.updateStatus(status);
+        return ResponseEntity.ok(
+                new ApiResponse(
+                        HttpStatus.OK.value(),
+                        "Counselling status updated successfully",
+                        updatedStatus
+                )
+        );
     }
 
     @DeleteMapping("/reset-allotment")
-    public ResponseEntity<?> resetAllotmentProcess() {
+    public ResponseEntity<ApiResponse> resetAllotmentProcess() {
         Boolean resetSuccess = applicationService.resetAllotmentProcess();
-        CounsellingStatus counsellingStatus = counsellingStatusRepository.findById(1L)
-                .orElse(new CounsellingStatus());
-        // set counselling started -> to false
-        counsellingStatus.setCounsellingStarted(false);
+        counsellingStatusService.updateStatus(Status.NOT_STARTED);
         return resetSuccess ?
-                new ResponseEntity<>("Reset Success", HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                ResponseEntity.ok(
+                        new ApiResponse(
+                                HttpStatus.OK.value(),
+                                "Reset Success",
+                                null
+                        )
+                ) : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new ApiResponse(
+                             HttpStatus.BAD_REQUEST.value(),
+                             "Reset Failed",
+                             null
+                        )
+        );
     }
 
 }
