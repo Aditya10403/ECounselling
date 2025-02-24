@@ -1,8 +1,6 @@
 package com.ECounselling.controller;
 
 import com.ECounselling.model.*;
-import com.ECounselling.repository.ApplicationRepository;
-import com.ECounselling.repository.CounsellingStatusRepository;
 import com.ECounselling.response.ApiError;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.response.AuthRequest;
@@ -51,22 +49,6 @@ public class PublicController {
                 "Server is running...",
                 HttpStatus.OK
         );
-    }
-
-    @PostMapping("/signup")
-    public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
-        try {
-            ApiResponse response = adminService.addAdmin(admin);
-            return ResponseEntity.status(response.getStatusCode()).body(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ApiResponse(
-                            HttpStatus.BAD_REQUEST.value(),
-                            e.getMessage(),
-                            null
-                    )
-            );
-        }
     }
 
     @PostMapping("/login")

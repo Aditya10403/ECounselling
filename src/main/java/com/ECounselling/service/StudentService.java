@@ -3,7 +3,6 @@ package com.ECounselling.service;
 import com.ECounselling.model.Student;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.response.MailResponse;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Map;

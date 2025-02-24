@@ -1,12 +1,10 @@
 package com.ECounselling.controller;
 
 import com.ECounselling.model.*;
-import com.ECounselling.repository.AllocationResultRepository;
 import com.ECounselling.repository.ApplicationRepository;
 import com.ECounselling.response.MailResponse;
 import com.ECounselling.service.AllocationResultService;
 import com.ECounselling.service.ApplicationService;
-import com.ECounselling.service.CounsellingStatusService;
 import com.ECounselling.service.StudentService;
 import com.ECounselling.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/student")

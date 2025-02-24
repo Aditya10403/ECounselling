@@ -3,7 +3,6 @@ package com.ECounselling.controller;
 import com.ECounselling.model.*;
 import com.ECounselling.repository.AllocationResultRepository;
 import com.ECounselling.repository.ApplicationRepository;
-import com.ECounselling.repository.CounsellingStatusRepository;
 import com.ECounselling.response.ApiResponse;
 import com.ECounselling.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
