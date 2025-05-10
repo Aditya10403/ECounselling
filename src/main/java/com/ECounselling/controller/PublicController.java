@@ -29,6 +29,9 @@ public class PublicController {
     private CollegeService collegeService;
 
     @Autowired
+    private AdminService adminService;
+
+    @Autowired
     private CounsellingStatusService counsellingStatusService;
 
     @Autowired
@@ -46,6 +49,22 @@ public class PublicController {
                 "Server is running...",
                 HttpStatus.OK
         );
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse> createAdmin(@RequestBody Admin admin) {
+        try {
+            ApiResponse response = adminService.addAdmin(admin);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ApiResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            e.getMessage(),
+                            null
+                    )
+            );
+        }
     }
 
     @PostMapping("/login")
