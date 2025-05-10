@@ -1,8 +1,14 @@
-FROM maven:3.8.5-openjdk-17 AS build
-COPY . .
-RUN mvn clean package -DskipTests
+FROM openjdk:17-jdk-slim
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/ECounselling-0.0.1-SNAPSHOT.jar prod.jar
+ENV SPRING_PROFILES_ACTIVE=prod
+
+WORKDIR /app
+
+COPY target/ECounselling-*.jar app.jar
+
+COPY src/main/resources/application.yml .
+COPY src/main/resources/application-prod.yml .
+
 EXPOSE 8080
-ENTRYPOINT [ "java", "-jar", "prod.jar" ]
+
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.config.location=file:./application.yml,file:./application-prod.yml" ]
